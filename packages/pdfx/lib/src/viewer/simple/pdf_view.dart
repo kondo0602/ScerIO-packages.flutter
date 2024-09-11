@@ -87,7 +87,7 @@ class _PdfViewState extends State<PdfView> {
   @override
   void initState() {
     super.initState();
-    _controller._attach(this);
+    _controller._attach();
     _controller.loadingState.addListener(() {
       switch (_controller.loadingState.value) {
         case PdfLoadingState.loading:
@@ -104,12 +104,6 @@ class _PdfViewState extends State<PdfView> {
         setState(() {});
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _controller._detach();
-    super.dispose();
   }
 
   Future<PdfPageImage> _getPageImage(int pageIndex) =>

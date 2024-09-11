@@ -24,7 +24,6 @@ class PdfController with BasePdfController {
   /// direction.
   final double viewportFraction;
 
-  _PdfViewState? _pdfViewState;
   PageController? _pageController;
   PdfDocument? _document;
 
@@ -102,11 +101,8 @@ class PdfController with BasePdfController {
     Future<PdfDocument> documentFuture, {
     int initialPage = 1,
   }) async {
-    if (_pdfViewState == null) return;
-
     try {
       if (page != initialPage) {
-        _pdfViewState?.widget.onPageChanged?.call(initialPage);
         pageListenable.value = initialPage;
       }
       _reInitPageController(initialPage);
@@ -115,8 +111,6 @@ class PdfController with BasePdfController {
       _document = await documentFuture;
       loadingState.value = PdfLoadingState.success;
     } catch (error) {
-      _pdfViewState!._loadingError =
-          error is Exception ? error : Exception('Unknown error');
       loadingState.value = PdfLoadingState.error;
     }
   }
@@ -129,22 +123,12 @@ class PdfController with BasePdfController {
     );
   }
 
-  void _attach(_PdfViewState pdfViewState) {
-    if (_pdfViewState != null) {
-      return;
-    }
-
-    _pdfViewState = pdfViewState;
-
+  void _attach() {
     _reInitPageController(initialPage);
 
     if (_document == null) {
       _loadDocument(document, initialPage: initialPage);
     }
-  }
-
-  void _detach() {
-    _pdfViewState = null;
   }
 
   void dispose() {

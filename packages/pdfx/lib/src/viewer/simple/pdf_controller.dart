@@ -124,7 +124,7 @@ class PdfController with BasePdfController {
   }
 
   void _attach() {
-    _reInitPageController(initialPage);
+    _reInitPageController(page);
 
     if (_document == null) {
       _loadDocument(document, initialPage: initialPage);
